@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">Where did I park</string>
+    <string name="title_activity_maps">Where did I park</string>
+    <string name="location_permission_denied_message" translatable="true">Where did I park needs to
+        access your location in order to save coordinates of your parked vehicle. To allow access
+        to your location go to the app's settings in the Applications menu and grant the permission</string>
+    <string name="garage_checkBox_text" translatable="true">I am in a garage</string>
+    <string name="garage_label" translatable="true">Garage info:</string>
+    <string name="level_label_text" translatable="true">Level No.</string>
+    <string name="row_label_text" translatable="true">Row No.</string>
+    <string name="zone_label_text" translatable="true">Zone</string>
+    <string name="note_label_text" translatable="true">Note</string>
+    <string name="save_button_text" translatable="true">Save</string>
+    <string name="spot_number_label" translatable="true">Spot No.</string>
+    <string name="sharing_error_message" translatable="true">There is no saved location to be shared</string>
+    <string name="location_sharing_explanation" translatable="true">Hi, this is the location of my parked vehicle.</string>
+    <string name="share_window_title" translatable="true">Share via</string>
+    <string name="navigation_error_message" translatable="true">There is no saved location to navigate to</string>
+    <string name="no_navigation_app_installed_message" translatable="true">There is no suitable application
+    to handle this action. Please install Google Maps to use this feature.</string>
+    <string name="marker_title" translatable="true">Vehicle location</string>
+    <string name="current_position_null_message" translatable="true">Where did I park was unable to retrieve your
+    current location. Please make sure the Location option on your phone is on.</string>
+</resources>

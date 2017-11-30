@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.mcodefactory.wheredidipark.AddNote">
+
+    <CheckBox
+        android:id="@+id/garage_checkBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/garage_checkBox_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/level_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/level_label_text"
+        app:layout_constraintBottom_toBottomOf="@+id/level_number"
+        app:layout_constraintStart_toStartOf="@+id/garage_checkBox"
+        app:layout_constraintTop_toTopOf="@+id/level_number" />
+
+    <EditText
+        android:id="@+id/level_number"
+        android:layout_width="60dp"
+        android:layout_height="43dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="numberSigned"
+        app:layout_constraintStart_toEndOf="@+id/level_label"
+        app:layout_constraintTop_toBottomOf="@+id/garage_checkBox" />
+
+    <TextView
+        android:id="@+id/row_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/row_label_text"
+        app:layout_constraintBottom_toBottomOf="@+id/row_text"
+        app:layout_constraintStart_toStartOf="@+id/level_label"
+        app:layout_constraintTop_toTopOf="@+id/row_text" />
+
+    <EditText
+        android:id="@+id/row_text"
+        android:layout_width="61dp"
+        android:layout_height="42dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/level_number"
+        app:layout_constraintTop_toBottomOf="@+id/level_number" />
+
+    <TextView
+        android:id="@+id/zone_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/zone_label_text"
+        app:layout_constraintBottom_toBottomOf="@+id/zone_text"
+        app:layout_constraintStart_toStartOf="@+id/row_label"
+        app:layout_constraintTop_toTopOf="@+id/zone_text" />
+
+    <EditText
+        android:id="@+id/zone_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="text"
+        app:layout_constraintStart_toStartOf="@+id/row_text"
+        app:layout_constraintTop_toBottomOf="@+id/row_text" />
+
+    <TextView
+        android:id="@+id/note_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/note_label_text"
+        app:layout_constraintStart_toStartOf="@+id/spot_number_label"
+        app:layout_constraintTop_toBottomOf="@+id/spot_number" />
+
+    <EditText
+        android:id="@+id/note_text"
+        android:layout_width="344dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/note_label"
+        app:layout_constraintTop_toBottomOf="@+id/note_label" />
+
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/save_button_text"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/note_text" />
+
+    <TextView
+        android:id="@+id/spot_number_label"
+        android:layout_width="wrap_content"
+        android:layout_height="21dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/spot_number_label"
+        app:layout_constraintBottom_toBottomOf="@+id/spot_number"
+        app:layout_constraintStart_toStartOf="@+id/zone_label"
+        app:layout_constraintTop_toTopOf="@+id/spot_number" />
+
+    <EditText
+        android:id="@+id/spot_number"
+        android:layout_width="60dp"
+        android:layout_height="45dp"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="@+id/zone_text"
+        app:layout_constraintTop_toBottomOf="@+id/zone_text" />
+</android.support.constraint.ConstraintLayout>
+</ScrollView>

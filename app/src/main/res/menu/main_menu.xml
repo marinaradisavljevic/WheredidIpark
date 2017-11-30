@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="Add" android:id="@+id/save_location"
+        android:icon="@drawable/ic_map_marker_plus" app:showAsAction="always" />
+    <item android:title="Remove" android:id="@+id/delete_location"
+        android:icon="@drawable/ic_map_marker_off" app:showAsAction="ifRoom" />
+    <item android:title="Add a note" android:id="@+id/add_note"
+        android:icon="@drawable/ic_clipboard_text" app:showAsAction="always" />
+    <item android:title="Take me to location" android:id="@+id/navigate"
+        android:icon="@drawable/ic_directions" app:showAsAction="always" />
+    <item android:title="Share" android:id="@+id/share_location"
+        android:icon="@drawable/ic_share_variant" app:showAsAction="ifRoom" />
+</menu>
