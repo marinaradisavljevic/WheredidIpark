@@ -63,6 +63,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private String garageZone;
     private String garageSpot;
     Marker vehiclePositionMarker;
+    Bitmap carIcon;
     MarkerOptions markerOptions;
     private FusedLocationProviderClient fusedLocationProviderClient;
     private boolean locationPermissionGranted;
@@ -88,9 +89,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         retrieveSavedLocation();
 
-        retrieveNoteInfo();
-
         markerOptions = new MarkerOptions();
+        carIcon = getBitmap(this, R.drawable.ic_car);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -108,7 +108,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(getBitmap(this, R.drawable.ic_car)))
+        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(carIcon))
                 .title(getResources().getString(R.string.marker_title));
         if (savedLocation != null) {
             markerOptions.position(savedLocation);
@@ -117,6 +117,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
+                retrieveNoteInfo();
                 String toastMessage = "";
                 if (isInGarage) {
                     if (!garageLevel.equals(DEFAULT_STRING)) {
@@ -168,12 +169,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     @Override
                     public void onSuccess(Location location) {
                         if (location == null) {
+                            currentPosition = null;
                             Log.d(TAG, "The retrieved location is null.");
                             return;
                         }
                         currentPosition = new LatLng(location.getLatitude(), location.getLongitude());
-                        Log.d(TAG, "Fused Location provider obtained the " + location.getLongitude() +
-                                " longitude and " + location.getLatitude() + " latitude");
                         mMap.moveCamera(CameraUpdateFactory.newLatLng(currentPosition));
                         mMap.animateCamera(CameraUpdateFactory.zoomTo(DEFAULT_ZOOM));
                     }
@@ -299,16 +299,19 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SharedPreferences.Editor editor = sharedPreferences.edit();
         switch (item.getItemId()) {
             case R.id.save_location:
+                getDeviceLocation();
                 if (currentPosition != null) {
-                    editor.clear();
+                    resetNoteValues();
                     editor.putString(VEHICLE_LOCATION_LAT_KEY, String.valueOf(currentPosition.latitude));
                     editor.putString(VEHICLE_LOCATION_LNG_KEY, String.valueOf(currentPosition.longitude));
                     editor.commit();
-                    markerOptions.position(currentPosition);
-                    if (vehiclePositionMarker != null) {
-                        vehiclePositionMarker.remove();
-                        vehiclePositionMarker = mMap.addMarker(markerOptions);
+                    if (markerOptions == null) {
+                        markerOptions = new MarkerOptions();
+                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(carIcon))
+                                .title(getResources().getString(R.string.marker_title));
                     }
+                    markerOptions.position(currentPosition);
+                    mMap.addMarker(markerOptions);
                     enableMenuItems();
                 } else {
                     Toast.makeText(this,
@@ -318,11 +321,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
 
             case R.id.delete_location:
-                editor.clear();
-                editor.commit();
-                if (vehiclePositionMarker != null) {
-                    vehiclePositionMarker.remove();
-                }
+                editor.clear().commit();
+                mMap.clear();
                 disableMenuItems();
                 break;
 
@@ -339,44 +339,56 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     Toast.makeText(this,
                             getResources().getString(R.string.navigation_error_message),
                             Toast.LENGTH_SHORT).show();
-                }
-                Double latitude = Double.parseDouble(stringLat);
-                Double longitude = Double.parseDouble(stringLng);
-                Uri intentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w");
-                Intent navigationIntent = new Intent(Intent.ACTION_VIEW, intentUri);
-                navigationIntent.setPackage("com.google.android.apps.maps");
-                if (navigationIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(navigationIntent);
                 } else {
-                    Toast.makeText(this, getResources().getString(R.string.no_navigation_app_installed_message),
-                            Toast.LENGTH_SHORT).show();
+                    Double latitude = Double.parseDouble(stringLat);
+                    Double longitude = Double.parseDouble(stringLng);
+                    Uri intentUri = Uri.parse("google.navigation:q=" + latitude + "," + longitude + "&mode=w");
+                    Intent navigationIntent = new Intent(Intent.ACTION_VIEW, intentUri);
+                    navigationIntent.setPackage("com.google.android.apps.maps");
+                    if (navigationIntent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(navigationIntent);
+                    } else {
+                        Toast.makeText(this, getResources().getString(R.string.no_navigation_app_installed_message),
+                                Toast.LENGTH_SHORT).show();
+                    }
                 }
                 break;
 
             case R.id.share_location:
-
                 stringLat = sharedPreferences.getString(VEHICLE_LOCATION_LAT_KEY, DEFAULT_STRING);
                 stringLng = sharedPreferences.getString(VEHICLE_LOCATION_LNG_KEY, DEFAULT_STRING);
                 if (stringLat.equals(DEFAULT_STRING) || stringLng.equals(DEFAULT_STRING)) {
                     Toast.makeText(this,
                             getResources().getString(R.string.sharing_error_message),
                             Toast.LENGTH_SHORT).show();
+                } else {
+                    Double latitude = Double.parseDouble(stringLat);
+                    Double longitude = Double.parseDouble(stringLng);
+
+                    String uri = "http://maps.google.com/maps?saddr=" +latitude+","+longitude;
+
+                    Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    String subject = getResources().getString(R.string.location_sharing_explanation);
+                    shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
+                    shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, uri);
+                    startActivity(Intent.createChooser(shareIntent, getResources()
+                            .getString(R.string.share_window_title)));
                 }
-                latitude = Double.parseDouble(stringLat);
-                longitude = Double.parseDouble(stringLng);
-
-                String uri = "http://maps.google.com/maps?saddr=" +latitude+","+longitude;
-
-                Intent shareIntent = new Intent(android.content.Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                String subject = getResources().getString(R.string.location_sharing_explanation);
-                shareIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, subject);
-                shareIntent.putExtra(android.content.Intent.EXTRA_TEXT, uri);
-                startActivity(Intent.createChooser(shareIntent, getResources()
-                        .getString(R.string.share_window_title)));
                 break;
         }
         return true;
+    }
+
+    private void resetNoteValues() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(AddNote.LOCATION_NOTE_KEY, DEFAULT_STRING);
+        editor.putString(AddNote.LEVEL_KEY, DEFAULT_STRING);
+        editor.putString(AddNote.ZONE_KEY, DEFAULT_STRING);
+        editor.putString(AddNote.ROW_KEY, DEFAULT_STRING);
+        editor.putString(AddNote.SPOT_NUMBER_KEY, DEFAULT_STRING);
+        editor.putBoolean(AddNote.IS_IN_GARAGE_KEY, false);
+        editor.commit();
     }
 
     private void enableMenuItems() {
